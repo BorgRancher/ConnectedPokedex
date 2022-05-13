@@ -1,8 +1,10 @@
 plugins {
     id 'com.android.application'
+    id 'dagger.hilt.android.plugin'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.apollographql.apollo3'
+    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 android {
@@ -14,12 +16,14 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+        buildConfigField("String","BASE_URL","\"https://graphql-pokeapi.graphcdn.app\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+                arguments += ["dagger.hilt.disableModulesHaveInstallInCheck" : "true"]
             }
         }
     }
@@ -29,7 +33,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            debuggable true
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -37,6 +46,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
+    namespace 'tech.borgranch.pokedex'
 }
 
 dependencies {
@@ -44,7 +57,11 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
 
-    implementation 'com.google.android.material:material:1.5.0'
+    // Kotlin extensions for activity and fragment
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+
+    implementation 'com.google.android.material:material:1.6.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
@@ -56,7 +73,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Apollo GraphQL
-    implementation 'com.apollographql.apollo3:apollo-runtime:3.2.2'
+    implementation 'com.apollographql.apollo3:apollo-runtime:3.3.0'
 
     // Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'
@@ -70,24 +87,51 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    // hilt
+    // optional - Room test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    // hilt for dependency injection
     def hilt_version = '2.41'
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_version"
 
+    // For instrumentation tests
+    androidTestAnnotationProcessor "com.google.dagger:hilt-compiler:$hilt_version"
 
-    // optional - Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
+    // For local unit tests
+    testImplementation 'com.google.dagger:hilt-android-testing:2.41'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.41'
+
+    // Groupie for recycler views
+    def groupie_version = '2.10.1'
+    implementation "com.github.lisawray.groupie:groupie:$groupie_version"
+    implementation "com.github.lisawray.groupie:groupie-viewbinding:$groupie_version"
 
     // optional - Paging 3 Integration
     implementation "androidx.room:room-paging:2.5.0-alpha01"
+
+    // Timber for better logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+
+    // Stetho for debugging
+    def stetho_version = '1.6.0'
+    implementation "com.facebook.stetho:stetho:$stetho_version"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stetho_version"
+
+    // Glide for image wrangling
+    def glide_version = '4.13.2'
+    def glide_palette_version =  '1.0.6'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.florent37:glidepalette:$glide_palette_version"
 
 }
 
 apollo {
-    packageName.set("app.graphcdn.graphql.pokeapi")
-
+    packageName.set("tech.borgranch.pokedex.graphql")
+    generateTestBuilders.set(true)
 }
+

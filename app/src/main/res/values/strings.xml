@@ -3,4 +3,6 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="monster_name">Placeholder name</string>
+    <string name="artwork_for_pocket_monster">artwork for pocket monster</string>
 </resources>

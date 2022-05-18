@@ -42,8 +42,8 @@ object NetworkModule {
      */
     fun providePokedexClient(okHttpClient: OkHttpClient): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BuildConfig.BASE_URL)
             .okHttpClient(okHttpClient)
+            .serverUrl(BuildConfig.BASE_URL)
             .build()
     }
 }

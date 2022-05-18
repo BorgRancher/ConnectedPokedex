@@ -12,7 +12,7 @@ interface ListDao {
     fun insert(pokemonItem: PokemonItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg pokemonItems: PokemonItem)
+    fun insertAll(pokemonItems: List<PokemonItem>)
 
     @Query("SELECT * FROM pokemon_item WHERE page = :page")
     fun getPage(page: Int): List<PokemonItem>
@@ -22,4 +22,7 @@ interface ListDao {
 
     @Query("SELECT * FROM pokemon_item WHERE name like :name")
     fun getPokemonByName(name: String): List<PokemonItem>
+
+    @Query("SELECT EXISTS(SELECT 1 FROM pokemon_item WHERE name = :name)")
+    fun exists(name: String?): Boolean
 }

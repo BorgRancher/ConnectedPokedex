@@ -3,7 +3,7 @@ package tech.borgranch.pokedex
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import tech.borgranch.pokedex.ui.main.MainFragment
+import tech.borgranch.pokedex.ui.main.ListFragment
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         try {
             if (savedInstanceState == null) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, ListFragment.newInstance())
                     .commitNow()
             }
         } catch (ex: Exception) {

@@ -26,6 +26,12 @@ class ListRepository @Inject constructor(
         const val POKEMON_LIMIT = 20
     }
 
+    private val loadingState: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    val loading: LiveData<Boolean> get() = loadingState
+
+    private val errorState: MutableLiveData<String> = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = errorState
+
     private var coroutineScope = CoroutineScope(coroutineDispatcher)
     private var pokemonList: MutableLiveData<List<PokemonItem>> = MutableLiveData()
     val allPokemon: LiveData<List<PokemonItem>> get() = pokemonList
@@ -38,10 +44,14 @@ class ListRepository @Inject constructor(
 
     @WorkerThread
     private suspend fun fetchPokeDexAsync(page: Int): Deferred<List<PokemonItem>> = coroutineScope.async {
+        loadingState.postValue(true)
         val pokemons = itemDao.getPage(page)
+        if (pokemons.isNotEmpty()) {
+            loadingState.postValue(false) // already in database
+        }
         return@async pokemons.ifEmpty {
             fetchRemotePokemon(page)
-            itemDao.getPage(page)
+            itemDao.getCurrentPages(page)
         }
     }
 
@@ -57,12 +67,15 @@ class ListRepository @Inject constructor(
 
                 incoming.data?.pokemons?.results?.mapNotNull { result ->
                     result?.let {
-                        itemDao.insert(it.toPokemonItem(page))
+                        if (!itemDao.exists(it.name)) itemDao.insert(it.toPokemonItem(page))
                     }
                 }
             }
         } catch (e: Exception) {
+            errorState.postValue(e.message)
             throw Exception(e.message)
+        } finally {
+            loadingState.postValue(false)
         }
     }
 }

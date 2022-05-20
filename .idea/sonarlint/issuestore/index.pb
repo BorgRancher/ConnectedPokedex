@@ -44,8 +44,6 @@ T
 $.idea/codeStyles/codeStyleConfig.xml,d/d/dd7b3350c29c49497756c7f32c69a3bed18b1cba
 S
 #.idea/inspectionProfiles/ktlint.xml,5/c/5c38e81e4b84e65fe22b11305ae18b198bb975e5
-p
-@app/src/main/java/tech/borgranch/pokedex/data/dto/PokemonItem.kt,3/2/328dc0818e79b3f4f02b9fef0b4ff99effdaf122
 X
 (gradle/wrapper/gradle-wrapper.properties,f/b/fbe448ebfc3eb2d4e308f6b8b043666f5b57235e
 F

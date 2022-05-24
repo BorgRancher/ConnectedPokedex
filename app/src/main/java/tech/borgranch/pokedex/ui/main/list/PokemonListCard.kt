@@ -10,7 +10,6 @@ import com.xwray.groupie.viewbinding.BindableItem
 import tech.borgranch.pokedex.R
 import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.databinding.ItemPokemonBinding
-import tech.borgranch.pokedex.ui.main.ListFragmentDirections
 
 class PokemonListCard(
     private val listedPokemon: PokemonItem

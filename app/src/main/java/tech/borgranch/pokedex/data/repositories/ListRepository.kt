@@ -23,7 +23,7 @@ class ListRepository @Inject constructor(
 ) {
 
     companion object {
-        const val POKEMON_LIMIT = 20
+        const val POKEMON_LIMIT = 8
     }
 
     private val loadingState: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
@@ -47,7 +47,9 @@ class ListRepository @Inject constructor(
         loadingState.postValue(true)
         val pokemons = itemDao.getPage(page)
         if (pokemons.isNotEmpty()) {
-            loadingState.postValue(false) // already in database
+            // already in db
+            loadingState.postValue(false)
+            return@async itemDao.getCurrentPages(page)
         }
         return@async pokemons.ifEmpty {
             fetchRemotePokemon(page)

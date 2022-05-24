@@ -11,7 +11,7 @@ import tech.borgranch.pokedex.data.dto.PokemonItem
  * Offline storage for PokeDex data.
  * @author Shaun McDonald
  */
-@Database(entities = [PokemonItem::class, PokemonDetail::class], version = 2, exportSchema = true)
+@Database(entities = [PokemonItem::class, PokemonDetail::class], version = 3, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getPokemonItemDao(): ListDao
     abstract fun getPokemonDetailDao(): DetailDao

@@ -14,7 +14,6 @@ DataMappers {
             weight = this.weight ?: 0,
             species = this.species?.name ?: "",
             types = this.types?.mapNotNull { it -> it?.type?.name }?.joinToString(", ").orEmpty(),
-            sprites = this.sprites?.get(0)?.front_default ?: "",
             abilities = this.abilities?.mapNotNull { it?.ability?.name }?.joinToString(", ").orEmpty(),
         )
     }

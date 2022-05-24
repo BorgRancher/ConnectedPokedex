@@ -12,9 +12,10 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import tech.borgranch.pokedex.data.dto.PokemonItem
-import tech.borgranch.pokedex.databinding.ListFragmentBinding
-import tech.borgranch.pokedex.databinding.PokemonItemBinding
+import tech.borgranch.pokedex.databinding.FragmentListBinding
+import tech.borgranch.pokedex.databinding.ItemPokemonBinding
 import tech.borgranch.pokedex.ui.main.list.PokemonListCard
+import java.net.URI
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
@@ -23,16 +24,22 @@ class ListFragment : Fragment() {
         fun newInstance() = ListFragment()
     }
 
+    private val selectedIndex: Int = -1
+
+    interface OnFragmentInteractionListener {
+        fun onFragmentInteraction(uri: URI)
+    }
+
     private val viewModel by viewModels<ListViewModel>()
-    private var _ui: ListFragmentBinding? = null
-    private val ui: ListFragmentBinding get() = _ui!!
-    private val groupAdaptor = GroupAdapter<GroupieViewHolder<PokemonItemBinding>>()
+    private var _ui: FragmentListBinding? = null
+    private val ui: FragmentListBinding get() = _ui!!
+    private val groupAdaptor = GroupAdapter<GroupieViewHolder<ItemPokemonBinding>>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _ui = ListFragmentBinding.inflate(inflater, container, false)
+        _ui = FragmentListBinding.inflate(inflater, container, false)
         return ui.root
     }
 
@@ -43,6 +50,9 @@ class ListFragment : Fragment() {
 
     private fun bindUI() {
         lifecycleScope.launchWhenResumed {
+            if (selectedIndex == -1) {
+                viewModel.fetchNextPokemonList()
+            }
             viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
                 // Update the cached copy of the pokemonList in the adapter.
                 pokemonList?.let {
@@ -82,5 +92,10 @@ class ListFragment : Fragment() {
 
     private fun List<PokemonItem>.toPokemonCards(): List<PokemonListCard> {
         return this.map { pokemonItem -> PokemonListCard(pokemonItem) }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _ui = null
     }
 }

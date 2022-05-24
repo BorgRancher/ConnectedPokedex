@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import tech.borgranch.pokedex.data.converters.DataMappers.toPokemonDetail
 import tech.borgranch.pokedex.data.dao.DetailDao
 import tech.borgranch.pokedex.data.dto.PokemonDetail
@@ -25,11 +24,9 @@ class DetailRepository @Inject constructor(
     private var pokemonInfo: MutableLiveData<PokemonDetail> = MutableLiveData()
     val pokemonDetail: LiveData<PokemonDetail> get() = pokemonInfo
 
-    fun getPokemonDetail(name: String) {
-        coroutineScope.launch {
-            val localData = getPokemonDetailAsync(name).await()
-            pokemonInfo.postValue(localData)
-        }
+    suspend fun getPokemonDetail(name: String) {
+        val localData = getPokemonDetailAsync(name).await()
+        pokemonInfo.postValue(localData)
     }
 
     private suspend fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail> = coroutineScope.async(coroutineDispatcher) {

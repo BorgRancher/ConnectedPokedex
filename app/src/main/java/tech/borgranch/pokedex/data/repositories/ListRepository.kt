@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import tech.borgranch.pokedex.data.converters.DataMappers.toPokemonItem
 import tech.borgranch.pokedex.data.dao.ListDao
 import tech.borgranch.pokedex.data.dto.PokemonItem
@@ -36,10 +35,8 @@ class ListRepository @Inject constructor(
     private var pokemonList: MutableLiveData<List<PokemonItem>> = MutableLiveData()
     val allPokemon: LiveData<List<PokemonItem>> get() = pokemonList
 
-    fun fetchPokeDex(page: Int) {
-        coroutineScope.launch(coroutineDispatcher) {
-            pokemonList.postValue(fetchPokeDexAsync(page).await())
-        }
+    suspend fun fetchPokeDex(page: Int) {
+        pokemonList.postValue(fetchPokeDexAsync(page).await())
     }
 
     @WorkerThread

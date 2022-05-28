@@ -5,7 +5,6 @@ import tech.borgranch.pokedex.R
 object TypeUtils {
     fun getTypeColor(type: String): Int {
         return when (type) {
-
             "fighting" -> R.color.fighting
             "flying" -> R.color.flying
             "poison" -> R.color.poison

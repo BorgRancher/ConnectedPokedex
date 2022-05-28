@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 import tech.borgranch.pokedex.utils.HyperlinkDebugTree
 import timber.log.Timber
+import java.util.UUID
 
 @HiltAndroidApp
 class PokedexApp : Application() {
@@ -20,5 +21,9 @@ class PokedexApp : Application() {
             // See explanation for HyperlinkDebugTree
             Timber.plant(HyperlinkDebugTree())
         }
+    }
+
+    fun getImageFile(): String {
+        return "pokeart${UUID.randomUUID()}.jpg"
     }
 }

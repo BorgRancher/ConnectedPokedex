@@ -1,17 +1,25 @@
 package tech.borgranch.pokedex.data.repositories
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.Optional
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import tech.borgranch.pokedex.PokedexApp
 import tech.borgranch.pokedex.data.converters.DataMappers.toPokemonItem
 import tech.borgranch.pokedex.data.dao.ListDao
 import tech.borgranch.pokedex.data.dto.PokemonItem
+import tech.borgranch.pokedex.graphics.BitmapUtils
 import tech.borgranch.pokedex.graphql.PokemonsQuery
 import javax.inject.Inject
 
@@ -54,6 +62,7 @@ class ListRepository @Inject constructor(
         }
     }
 
+    @WorkerThread
     private suspend fun fetchRemotePokemon(page: Int) {
         try {
             val incoming = pokeApiClient.query(
@@ -66,7 +75,10 @@ class ListRepository @Inject constructor(
 
                 incoming.data?.pokemons?.results?.mapNotNull { result ->
                     result?.let {
-                        if (!itemDao.exists(it.name)) itemDao.insert(it.toPokemonItem(page))
+                        if (!itemDao.exists(it.name)) {
+                            saveArtwork(it.toPokemonItem(page))
+                            // Save image to local file system
+                        }
                     }
                 }
             }
@@ -76,5 +88,27 @@ class ListRepository @Inject constructor(
         } finally {
             loadingState.postValue(false)
         }
+    }
+
+    private fun saveArtwork(it: PokemonItem) = coroutineScope.launch(coroutineDispatcher) {
+        Glide.with(PokedexApp.instance)
+            .asBitmap()
+            .load(it.artwork)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    coroutineScope.launch(coroutineDispatcher) {
+                        val filePath =
+                            BitmapUtils.saveBitmap(resource, PokedexApp.instance)
+                        val updatedPokemon = it.copy(artwork = filePath)
+                        itemDao.insert(updatedPokemon)
+                    }
+                }
+            })
     }
 }

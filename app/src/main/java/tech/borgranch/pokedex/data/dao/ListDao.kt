@@ -25,4 +25,7 @@ interface ListDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM pokemon_item WHERE name = :name)")
     fun exists(name: String?): Boolean
+
+    @Query("UPDATE pokemon_item SET artwork= :filePath WHERE name = :name")
+    fun updateImage(name: String, filePath: String)
 }

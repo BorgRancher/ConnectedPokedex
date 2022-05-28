@@ -122,6 +122,7 @@ class DetailFragment : Fragment() {
                         if (rgb != null) {
                             ui.apply {
                                 image.setBackgroundColor(rgb)
+                                header.setBackgroundColor(rgb)
                             }
                         }
                     }.crossfade(true)

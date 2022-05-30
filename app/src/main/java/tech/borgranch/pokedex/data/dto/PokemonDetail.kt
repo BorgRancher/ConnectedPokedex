@@ -17,7 +17,6 @@ data class PokemonDetail(
     val weight: Int = 0,
     val species: String? = null,
     val abilities: String? = null,
-    val sprites: String? = null,
     val types: String? = null,
 ) : Parcelable {
 
@@ -25,7 +24,6 @@ data class PokemonDetail(
         parcel.readString()!!,
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString()
@@ -44,11 +42,7 @@ data class PokemonDetail(
     }
 
     fun getTypesString(): String {
-        return this.types ?: ""
-    }
-
-    fun getFrontSprite(): String {
-        return this.sprites?.split(", ")?.get(0) ?: ""
+        return this.types?.map { item -> item }?.joinToString(",") ?: ""
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -57,7 +51,6 @@ data class PokemonDetail(
         parcel.writeInt(weight)
         parcel.writeString(species)
         parcel.writeString(abilities)
-        parcel.writeString(sprites)
         parcel.writeString(types)
     }
 

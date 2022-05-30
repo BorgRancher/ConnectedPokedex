@@ -1,4 +1,4 @@
-package tech.borgranch.pokedex.ui.main
+package tech.borgranch.pokedex.ui.main.list
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.data.repositories.ListRepository
 import timber.log.Timber
@@ -18,8 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    listRepository: ListRepository,
-    ioDispatcher: CoroutineDispatcher
+    private val listRepository: ListRepository,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     val isLoading: LiveData<Boolean> = listRepository.loading
     val errorMessage: LiveData<String> = listRepository.errorMessage
@@ -32,10 +33,10 @@ class ListViewModel @Inject constructor(
         Timber.d("ListViewModel created")
         viewModelScope.launch {
 
-            pokemonIndex.observeForever { page ->
-                Timber.d("ListViewModel: fetching page $page")
-                listRepository.fetchPokeDex(page)
-            }
+            // pokemonIndex.observeForever { page ->
+            //     Timber.d("ListViewModel: fetching page $page")
+            //     listRepository.fetchPokeDex(page)
+            // }
 
             Transformations.map(isLoading) { it ->
                 if (!it) {
@@ -46,9 +47,12 @@ class ListViewModel @Inject constructor(
     }
 
     @MainThread
-    fun fetchNextPokemonList() {
+    fun fetchNextPokemonList() = viewModelScope.launch {
         if (!isLoading.value!!) {
             pokemonIndex.value = pokemonIndex.value?.plus(1)
+            withContext(ioDispatcher) {
+                listRepository.fetchPokeDex(pokemonIndex.value!!)
+            }
         }
     }
 }

@@ -7,8 +7,8 @@ import com.apollographql.apollo3.api.Optional
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import tech.borgranch.pokedex.data.converters.DataMappers.toPokemonDetail
 import tech.borgranch.pokedex.data.dao.DetailDao
 import tech.borgranch.pokedex.data.dto.PokemonDetail
@@ -20,36 +20,33 @@ class DetailRepository @Inject constructor(
     val pokedexClient: ApolloClient,
     val coroutineDispatcher: CoroutineDispatcher
 ) {
-    private var coroutineScope = CoroutineScope(coroutineDispatcher)
+    private var coroutineScope = CoroutineScope(Dispatchers.Main)
     private var pokemonInfo: MutableLiveData<PokemonDetail> = MutableLiveData()
     val pokemonDetail: LiveData<PokemonDetail> get() = pokemonInfo
 
-    fun getPokemonDetail(name: String) {
-        coroutineScope.launch {
-            val deferred = getPokemonDetailAsync(name).await()
-            deferred?.let {
-                pokemonInfo.postValue(it)
-            }
-        }
+    suspend fun getPokemonDetail(name: String) {
+        val localData = getPokemonDetailAsync(name).await()
+        pokemonInfo.postValue(localData)
     }
 
-    private fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail?> = coroutineScope.async {
+    private suspend fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail> = coroutineScope.async(coroutineDispatcher) {
         val localDetail = detailDao.getPokemonDetailByName(name)
         when (localDetail != null) {
             true -> {
                 return@async localDetail
             }
             else -> {
-                return@async fetchRemotePokemon(name)
+                fetchRemotePokemon(name)
+                return@async detailDao.getPokemonDetailByName(name)!!
             }
         }
     }
 
-    private suspend fun fetchRemotePokemon(name: String): PokemonDetail? {
+    private suspend fun fetchRemotePokemon(name: String) {
         val result =
             pokedexClient.query(PokemonQuery(name = Optional.presentIfNotNull(name)))
                 .execute()
-        return when (result.hasErrors()) {
+        when (result.hasErrors()) {
             true -> {
                 throw Exception(result.errors.toString())
             }
@@ -57,7 +54,6 @@ class DetailRepository @Inject constructor(
                 val pokemonDetail = result.data?.pokemon?.toPokemonDetail()
                 pokemonDetail?.let {
                     detailDao.insert(it)
-                    return@let it
                 }
             }
         }

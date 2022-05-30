@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -96,6 +97,11 @@ class DetailFragment : Fragment() {
                 pokemonDetail.types?.let { it ->
                     initTypeRecyclerView(it.toTypeItems())
                 }
+                ui.arrow.setOnClickListener {
+                    val action = DetailFragmentDirections.actionDetailFragmentToListFragment()
+                    action.selectedIndex = this.index
+                    Navigation.findNavController(it).navigate(action)
+                }
             }
         }
     }
@@ -116,13 +122,15 @@ class DetailFragment : Fragment() {
             .load(artwork)
             .listener(
                 GlidePalette.with(artwork)
-                    .use(BitmapPalette.Profile.VIBRANT_LIGHT)
+                    .use(BitmapPalette.Profile.MUTED_LIGHT)
                     .intoCallBack { palette ->
                         val rgb = palette?.dominantSwatch?.rgb
-                        if (rgb != null) {
+                        val textColour = palette?.dominantSwatch?.titleTextColor
+                        if (rgb != null && textColour != null) {
                             ui.apply {
                                 image.setBackgroundColor(rgb)
                                 header.setBackgroundColor(rgb)
+                                appName.setTextColor(textColour)
                             }
                         }
                     }.crossfade(true)

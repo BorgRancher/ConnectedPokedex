@@ -22,7 +22,7 @@ object TypeUtils {
             "dragon" -> R.color.dragon
             "fairy" -> R.color.fairy
             "dark" -> R.color.dark
-            else -> R.color.gray_21
+            else -> R.color.default_type
         }
     }
 }

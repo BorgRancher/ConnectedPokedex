@@ -15,6 +15,9 @@
         <item name="android:padding">10dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:shadowColor">@color/transparent_grey</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
     </style>
 
     <style name="ShapeAppearanceOverlay.CardView" parent="">
@@ -28,5 +31,15 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?colorPrimary</item>
+    </style>
+    <style name="home_toolbar_detail_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@android:color/background_dark</item>
+        <item name="android:shadowDx">3</item>
+        <item name="android:shadowDy">3</item>
     </style>
 </resources>

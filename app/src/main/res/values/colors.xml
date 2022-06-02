@@ -46,4 +46,5 @@
     <color name="fighting">#9F422A</color>
     <color name="grass">#007C42</color>
     <color name="ground">#AD7235</color>
+    <color name="transparent_grey">#7F000000</color>
 </resources>

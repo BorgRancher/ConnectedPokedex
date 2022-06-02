@@ -26,8 +26,8 @@ class PokemonListCard(
                     GlidePalette.with(listedPokemon.artwork)
                         .use(BitmapPalette.Profile.MUTED)
                         .intoCallBack { palette ->
-                            val muted = palette?.dominantSwatch?.rgb
-                            val textColor = palette?.dominantSwatch?.titleTextColor
+                            val muted = palette?.lightMutedSwatch?.rgb
+                            val textColor = palette?.lightMutedSwatch?.titleTextColor
                             // Ensure that the text on the card is readable
                             if (muted != null && textColor != null) {
                                 viewBinding.cardView.setCardBackgroundColor(muted)

@@ -21,10 +21,6 @@ import java.net.URI
 @AndroidEntryPoint
 class ListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = ListFragment()
-    }
-
     private var selectedIndex: Int = -1
 
     interface OnFragmentInteractionListener {
@@ -57,17 +53,23 @@ class ListFragment : Fragment() {
                 selectedIndex = it.selectedIndex
             }
             if (selectedIndex == -1) {
+                selectedIndex = 0
                 viewModel.fetchNextPokemonList()
-            } else {
-                viewModel.retryPokemonList()
             }
+
             viewModel.pokemonPage.observe(viewLifecycleOwner) {
                 pokemonOffset = it * viewModel.limit
             }
             viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
-                // Update the cached copy of the pokemonList in the adapter.
+                if (!(pokemonList.isNotEmpty() || viewModel.isLoading())) {
+                    viewModel.fetchNextPokemonList()
+                }
                 pokemonList?.let {
                     initRecyclerView(it.toPokemonCards())
+                    if (selectedIndex != -1) {
+                        val lm = ui.pokemonsList.layoutManager as GridLayoutManager
+                        lm.scrollToPositionWithOffset(selectedIndex, 0)
+                    }
                 }
             }
 
@@ -77,8 +79,7 @@ class ListFragment : Fragment() {
 
     private fun initRecyclerView(pokemonCards: List<PokemonListCard>) {
         groupAdaptor.apply {
-            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            update(pokemonCards)
+            updateAsync(pokemonCards)
         }
 
         ui.pokemonsList.apply {
@@ -86,18 +87,19 @@ class ListFragment : Fragment() {
             adapter = groupAdaptor
         }
 
-        if (selectedIndex != -1) {
-            val lm = ui.pokemonsList.layoutManager as GridLayoutManager
-            lm.scrollToPositionWithOffset(selectedIndex, 20)
-        }
+        ui.pokemonsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-        val recyclerViewPager = RecyclerViewPager(
-            recyclerView = ui.pokemonsList,
-            isLoading = { viewModel.isLoading() },
-            loadMore = { viewModel.fetchNextPokemonList() },
-            onLast = { false }
-        )
-        recyclerViewPager.resetCurrentPage()
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                    viewModel.fetchNextPokemonList()
+                }
+            }
+        })
     }
 
     private fun List<PokemonItem>.toPokemonCards(): List<PokemonListCard> {

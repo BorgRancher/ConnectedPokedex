@@ -142,6 +142,10 @@ dependencies {
 
     // WorkManager for background processing
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+    // Lottie for animations
+    def lottie_version = '5.2.0'
+    implementation "com.airbnb.android:lottie:$lottie_version"
 }
 
 apollo {

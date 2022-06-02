@@ -10,6 +10,7 @@ import com.xwray.groupie.viewbinding.BindableItem
 import tech.borgranch.pokedex.R
 import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.databinding.ItemPokemonBinding
+import tech.borgranch.pokedex.ui.utils.verticalGradientDrawable
 
 class PokemonListCard(
     private val listedPokemon: PokemonItem
@@ -27,11 +28,11 @@ class PokemonListCard(
                         .use(BitmapPalette.Profile.MUTED)
                         .intoCallBack { palette ->
                             val muted = palette?.lightMutedSwatch?.rgb
-                            val textColor = palette?.lightMutedSwatch?.titleTextColor
+                            val darkMuted = palette?.darkMutedSwatch?.rgb
                             // Ensure that the text on the card is readable
-                            if (muted != null && textColor != null) {
-                                viewBinding.cardView.setCardBackgroundColor(muted)
-                                viewBinding.name.setTextColor(textColor)
+                            if (muted != null && darkMuted != null) {
+                                val gradientDrawable = verticalGradientDrawable(muted, darkMuted)
+                                viewBinding.cardView.background = gradientDrawable
                             }
                         }.crossfade(true)
                 )

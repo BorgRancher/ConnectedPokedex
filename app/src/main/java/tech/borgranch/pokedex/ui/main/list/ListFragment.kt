@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xwray.groupie.GroupAdapter
@@ -24,16 +25,18 @@ class ListFragment : Fragment() {
         fun newInstance() = ListFragment()
     }
 
-    private val selectedIndex: Int = -1
+    private var selectedIndex: Int = -1
 
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: URI)
     }
 
-    private val viewModel by viewModels<ListViewModel>()
+    private val viewModel by activityViewModels<ListViewModel>()
+    private var pokemonOffset: Int = 0
     private var _ui: FragmentListBinding? = null
     private val ui: FragmentListBinding get() = _ui!!
     private val groupAdaptor = GroupAdapter<GroupieViewHolder<ItemPokemonBinding>>()
+    private val navArgs by navArgs<ListFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,8 +53,16 @@ class ListFragment : Fragment() {
 
     private fun bindUI() {
         lifecycleScope.launchWhenResumed {
+            navArgs.let {
+                selectedIndex = it.selectedIndex
+            }
             if (selectedIndex == -1) {
                 viewModel.fetchNextPokemonList()
+            } else {
+                viewModel.retryPokemonList()
+            }
+            viewModel.pokemonPage.observe(viewLifecycleOwner) {
+                pokemonOffset = it * viewModel.limit
             }
             viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
                 // Update the cached copy of the pokemonList in the adapter.
@@ -60,36 +71,33 @@ class ListFragment : Fragment() {
                 }
             }
 
-            viewModel.isLoading.observe(viewLifecycleOwner) { loading ->
-                ui.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
-            }
+            ui.progressBar.visibility = if (viewModel.isLoading()) View.VISIBLE else View.GONE
         }
     }
 
     private fun initRecyclerView(pokemonCards: List<PokemonListCard>) {
         groupAdaptor.apply {
             stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            addAll(pokemonCards)
-            notifyItemRangeChanged(0, pokemonCards.size)
+            update(pokemonCards)
         }
+
         ui.pokemonsList.apply {
             layoutManager = GridLayoutManager(this@ListFragment.requireContext(), 2)
             adapter = groupAdaptor
         }
 
-        ui.pokemonsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        if (selectedIndex != -1) {
+            val lm = ui.pokemonsList.layoutManager as GridLayoutManager
+            lm.scrollToPositionWithOffset(selectedIndex, 20)
+        }
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
-                    viewModel.fetchNextPokemonList()
-                }
-            }
-        })
+        val recyclerViewPager = RecyclerViewPager(
+            recyclerView = ui.pokemonsList,
+            isLoading = { viewModel.isLoading() },
+            loadMore = { viewModel.fetchNextPokemonList() },
+            onLast = { false }
+        )
+        recyclerViewPager.resetCurrentPage()
     }
 
     private fun List<PokemonItem>.toPokemonCards(): List<PokemonListCard> {

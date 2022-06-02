@@ -19,6 +19,7 @@ import tech.borgranch.pokedex.PokedexApp
 import tech.borgranch.pokedex.data.converters.DataMappers.toPokemonItem
 import tech.borgranch.pokedex.data.dao.ListDao
 import tech.borgranch.pokedex.data.dto.PokemonItem
+import tech.borgranch.pokedex.errors.PokeDexErrorHandler
 import tech.borgranch.pokedex.graphics.BitmapUtils
 import tech.borgranch.pokedex.graphql.PokemonsQuery
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class ListRepository @Inject constructor(
     private var pokemonList: MutableLiveData<List<PokemonItem>> = MutableLiveData()
     val allPokemon: LiveData<List<PokemonItem>> get() = pokemonList
 
+    @WorkerThread
     suspend fun fetchPokeDex(page: Int) {
         pokemonList.postValue(fetchPokeDexAsync(page).await())
     }
@@ -53,8 +55,9 @@ class ListRepository @Inject constructor(
         val pokemons = itemDao.getPage(page)
         if (pokemons.isNotEmpty()) {
             // already in db
+            val data = itemDao.getCurrentPages(page)
             loadingState.postValue(false)
-            return@async itemDao.getCurrentPages(page)
+            return@async data
         }
         return@async pokemons.ifEmpty {
             fetchRemotePokemon(page)
@@ -76,15 +79,19 @@ class ListRepository @Inject constructor(
                 incoming.data?.pokemons?.results?.mapNotNull { result ->
                     result?.let {
                         if (!itemDao.exists(it.name)) {
-                            saveArtwork(it.toPokemonItem(page))
                             // Save image to local file system
+                            saveArtwork(it.toPokemonItem(page))
                         }
                     }
                 }
+            } else {
+                for (error in incoming.errors!!) {
+                    errorState.postValue(error.message)
+                }
             }
         } catch (e: Exception) {
-            errorState.postValue(e.message)
-            throw Exception(e.message)
+            val humanReadableError = PokeDexErrorHandler.getHumanReadableErrorMessage(e)
+            errorState.postValue(humanReadableError)
         } finally {
             loadingState.postValue(false)
         }
@@ -96,6 +103,11 @@ class ListRepository @Inject constructor(
             .load(it.artwork)
             .into(object : CustomTarget<Bitmap>() {
                 override fun onLoadCleared(placeholder: Drawable?) {
+                }
+
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    super.onLoadFailed(errorDrawable)
+                    errorState.postValue("Failed to load image")
                 }
 
                 override fun onResourceReady(

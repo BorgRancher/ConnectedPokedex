@@ -24,14 +24,14 @@ class PokemonListCard(
                 .listener(
                     // Load a complimentary background color for the artwork
                     GlidePalette.with(listedPokemon.artwork)
-                        .use(BitmapPalette.Profile.MUTED_LIGHT)
+                        .use(BitmapPalette.Profile.MUTED)
                         .intoCallBack { palette ->
-                            val rgb = palette?.dominantSwatch?.rgb
+                            val muted = palette?.dominantSwatch?.rgb
+                            val textColor = palette?.dominantSwatch?.titleTextColor
                             // Ensure that the text on the card is readable
-                            val titleColor = palette?.dominantSwatch?.titleTextColor
-                            if (rgb != null && titleColor != null) {
-                                viewBinding.cardView.setCardBackgroundColor(rgb)
-                                viewBinding.name.setTextColor(titleColor)
+                            if (muted != null && textColor != null) {
+                                viewBinding.cardView.setCardBackgroundColor(muted)
+                                viewBinding.name.setTextColor(textColor)
                             }
                         }.crossfade(true)
                 )
@@ -39,6 +39,7 @@ class PokemonListCard(
                 .into(image)
             name.text = listedPokemon.name
         }
+
         // Clicking on the card will navigate to the details screen
         viewBinding.cardView.setOnClickListener {
             val directions =

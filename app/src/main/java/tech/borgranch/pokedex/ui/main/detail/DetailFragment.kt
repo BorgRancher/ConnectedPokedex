@@ -75,11 +75,11 @@ class DetailFragment : Fragment() {
         navArgs.let {
             this.pokemonName = it.name
             this.artwork = it.artwork
-            this.index = it.index
+            this.index = it.index + 1
 
             lifecycleScope.launchWhenResumed {
-                viewModel.getPokemonDetail(pokemonName)
                 bindUI()
+                viewModel.getPokemonDetail(pokemonName)
             }
         }
     }
@@ -87,20 +87,22 @@ class DetailFragment : Fragment() {
     private fun bindUI() {
         viewModel.pokemonDetail.observe(viewLifecycleOwner) {
             it?.let { pokemonDetail ->
+                ui.progressbar.visibility = View.GONE
                 ui.apply {
                     loadArtwork()
                     name.text = pokemonDetail.name
+                    index.text = this@DetailFragment.index.toString().padStart(4, '0')
                 }
-                ui.progressbar.visibility = View.GONE
+
                 ui.height.text = pokemonDetail.getHeightString()
                 ui.weight.text = pokemonDetail.getWeightString()
                 pokemonDetail.types?.let { it ->
                     initTypeRecyclerView(it.toTypeItems())
                 }
-                ui.arrow.setOnClickListener {
+                ui.arrow.setOnClickListener { arrowView ->
                     val action = DetailFragmentDirections.actionDetailFragmentToListFragment()
-                    action.selectedIndex = this.index
-                    Navigation.findNavController(it).navigate(action)
+                    action.selectedIndex = this@DetailFragment.index - 1
+                    Navigation.findNavController(arrowView).navigate(action)
                 }
             }
         }
@@ -122,15 +124,12 @@ class DetailFragment : Fragment() {
             .load(artwork)
             .listener(
                 GlidePalette.with(artwork)
-                    .use(BitmapPalette.Profile.MUTED_LIGHT)
+                    .use(BitmapPalette.Profile.MUTED)
                     .intoCallBack { palette ->
                         val rgb = palette?.dominantSwatch?.rgb
-                        val textColour = palette?.dominantSwatch?.titleTextColor
-                        if (rgb != null && textColour != null) {
+                        if (rgb != null) {
                             ui.apply {
-                                image.setBackgroundColor(rgb)
                                 header.setBackgroundColor(rgb)
-                                appName.setTextColor(textColour)
                             }
                         }
                     }.crossfade(true)
@@ -151,7 +150,7 @@ class DetailFragment : Fragment() {
 }
 
 private fun String.toTypeItems(): List<TypeItem> {
-    return this.split(",").map {
-        TypeItem(it)
+    return this.split(", ").map {
+        TypeItem(it.trim())
     }
 }

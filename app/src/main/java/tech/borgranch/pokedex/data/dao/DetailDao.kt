@@ -16,4 +16,7 @@ interface DetailDao {
 
     @Query("SELECT * FROM pokemon_detail WHERE name = :name")
     fun getPokemonDetailByName(name: String): PokemonDetail?
+
+    @Query("SELECT name FROM pokemon_detail WHERE types LIKE :type")
+    fun getPokemonNamesByType(type: String): List<String>
 }

@@ -3,7 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar"
-    style="@style/home_toolbar">
+    style="@style/home_toolbar"
+    tools:context=".ui.main.MainActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp"
+        android:translationZ="100dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header"
+        app:srcCompat="@drawable/ic_arrow"
+        android:visibility="gone"/>
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/app_name"
@@ -17,4 +31,16 @@
         app:layout_constraintStart_toEndOf="@id/arrow"
         app:layout_constraintTop_toTopOf="@id/arrow" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/active_filter"
+        style="@style/TextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_filter"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:translationZ="100dp"
+        android:layout_gravity="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/arrow" />
 </androidx.appcompat.widget.Toolbar>

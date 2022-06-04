@@ -7,4 +7,5 @@
     <string name="abilities">Abilities</string>
     <string name="type_placeholder">TypeHolder</string>
     <string name="ability_placeholder">AbilityHolder</string>
+    <string name="default_filter">All Pokémon</string>
 </resources>

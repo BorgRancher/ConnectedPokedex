@@ -31,4 +31,7 @@ interface ListDao {
 
     @Query("UPDATE pokemon_item SET artwork= :filePath WHERE name = :name")
     fun updateImage(name: String, filePath: String)
+
+    @Query("SELECT * FROM pokemon_item WHERE name IN (:names)")
+    fun getPokemonByNames(names: List<String>): List<PokemonItem>
 }

@@ -23,39 +23,44 @@ class DetailRepository @Inject constructor(
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
     private var pokemonInfo: MutableLiveData<PokemonDetail> = MutableLiveData()
     val pokemonDetail: LiveData<PokemonDetail> get() = pokemonInfo
+    private var pokemonNames: MutableLiveData<List<String>> = MutableLiveData()
+    val pokemonNamesList: LiveData<List<String>> get() = pokemonNames
 
     suspend fun getPokemonDetail(name: String) {
         val localData = getPokemonDetailAsync(name).await()
         pokemonInfo.postValue(localData)
     }
 
-    private suspend fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail> = coroutineScope.async(coroutineDispatcher) {
-        val localDetail = detailDao.getPokemonDetailByName(name)
-        when (localDetail != null) {
-            true -> {
-                return@async localDetail
-            }
-            else -> {
-                fetchRemotePokemon(name)
-                return@async detailDao.getPokemonDetailByName(name)!!
+    suspend fun getPokemonNamesForType(type: String) {
+        val localData = getPokemonNamesForTypeAsync(type).await()
+        pokemonNames.postValue(localData)
+    }
+
+    private suspend fun getPokemonDetailAsync(name: String): Deferred<PokemonDetail> {
+        return coroutineScope.async(coroutineDispatcher) {
+            val pokemon = detailDao.getPokemonDetailByName(name)
+            if (pokemon != null) {
+                pokemon
+            } else {
+                val pokemonDetail = fetchRemotePokemon(name)
+                detailDao.insert(pokemonDetail!!)
+                pokemonDetail
             }
         }
     }
 
-    private suspend fun fetchRemotePokemon(name: String) {
-        val result =
-            pokedexClient.query(PokemonQuery(name = Optional.presentIfNotNull(name)))
-                .execute()
-        when (result.hasErrors()) {
-            true -> {
-                throw Exception(result.errors.toString())
-            }
-            else -> {
-                val pokemonDetail = result.data?.pokemon?.toPokemonDetail()
-                pokemonDetail?.let {
-                    detailDao.insert(it)
-                }
+    private fun getPokemonNamesForTypeAsync(type: String): Deferred<List<String>> {
+        return coroutineScope.async(coroutineDispatcher) {
+            val pokemonNames = detailDao.getPokemonNamesByType(type)
+            pokemonNames.ifEmpty {
+                emptyList()
             }
         }
+    }
+
+    private suspend fun fetchRemotePokemon(name: String): PokemonDetail? {
+        val pokemonQuery = PokemonQuery(Optional.presentIfNotNull(name))
+        val pokemonDetail = pokedexClient.query(pokemonQuery).execute().data?.pokemon
+        return pokemonDetail?.toPokemonDetail()
     }
 }

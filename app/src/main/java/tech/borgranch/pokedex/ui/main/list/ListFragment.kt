@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.databinding.FragmentListBinding
 import tech.borgranch.pokedex.databinding.ItemPokemonBinding
@@ -48,6 +52,12 @@ class ListFragment : Fragment() {
     }
 
     private fun bindUI() {
+        if (!viewModel.animShown) {
+            ui.animationView.visibility = View.VISIBLE
+            viewModel.animShown = true
+        } else {
+            ui.animationView.visibility = View.GONE
+        }
         lifecycleScope.launchWhenResumed {
             navArgs.let {
                 selectedIndex = it.selectedIndex
@@ -66,6 +76,17 @@ class ListFragment : Fragment() {
                 }
                 pokemonList?.let {
                     initRecyclerView(it.toPokemonCards())
+                    if (ui.animationView.visibility == View.VISIBLE) {
+                        lifecycleScope.launch(Dispatchers.Default) {
+                            delay(2000)
+                            withContext(Dispatchers.Main) {
+                                ui.animationView.visibility = View.GONE
+                                ui.pokemonsList.visibility = View.VISIBLE
+                            }
+                        }
+                    } else {
+                        ui.pokemonsList.visibility = View.VISIBLE
+                    }
                     if (selectedIndex != -1) {
                         val lm = ui.pokemonsList.layoutManager as GridLayoutManager
                         lm.scrollToPositionWithOffset(selectedIndex, 0)

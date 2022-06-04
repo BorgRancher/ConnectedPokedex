@@ -73,25 +73,23 @@ class DetailFragment : Fragment() {
             this.pokemonName = it.name
             this.artwork = it.artwork
             this.index = it.index + 1
-
-            lifecycleScope.launchWhenResumed {
-                bindUI()
-                viewModel.getPokemonDetail(pokemonName)
-            }
+            viewModel.getPokemonDetail(pokemonName)
+            bindUI()
         }
     }
 
     private fun bindUI() {
         lifecycleScope.launchWhenResumed {
+            ui.progressbar.visibility = View.VISIBLE
             viewModel.pokemonDetail.observe(viewLifecycleOwner) {
                 it?.let { monsterDetail ->
-                    ui.progressbar.visibility = View.GONE
                     ui.apply {
                         loadArtwork(artwork)
                         name.text = monsterDetail.name
                         index.text = this@DetailFragment.index.toString().padStart(4, '0')
                         height.text = monsterDetail.getHeightString()
                         weight.text = monsterDetail.getWeightString()
+                        progressbar.visibility = View.GONE
                     }
 
                     monsterDetail.types?.let { it ->

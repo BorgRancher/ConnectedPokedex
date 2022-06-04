@@ -32,7 +32,7 @@ class PokemonListCard(
                             // Ensure that the text on the card is readable
                             if (muted != null && darkMuted != null) {
                                 val gradientDrawable = verticalGradientDrawable(muted, darkMuted)
-                                viewBinding.cardView.background = gradientDrawable
+                                viewBinding.pokemonHolder.background = gradientDrawable
                             }
                         }.crossfade(true)
                 )

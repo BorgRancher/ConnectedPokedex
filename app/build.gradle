@@ -146,6 +146,13 @@ dependencies {
     // Lottie for animations
     def lottie_version = '5.2.0'
     implementation "com.airbnb.android:lottie:$lottie_version"
+
+    // Paging 3 for taming pokemon
+    def paging_version = '3.0.0'
+    implementation "androidx.paging:paging-runtime:$paging_version"
+
+    // alternatively - without Android dependencies for tests
+    testImplementation "androidx.paging:paging-common:$paging_version"
 }
 
 apollo {

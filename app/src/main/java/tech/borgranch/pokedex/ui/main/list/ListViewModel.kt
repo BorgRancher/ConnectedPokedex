@@ -23,6 +23,7 @@ class ListViewModel @Inject constructor(
     private val listRepository: ListRepository,
     private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
+    var animShown: Boolean = false
     val limit = ListRepository.POKEMON_LIMIT
     val errorMessage: LiveData<String> = listRepository.errorMessage
     private val supervisorJob = SupervisorJob()

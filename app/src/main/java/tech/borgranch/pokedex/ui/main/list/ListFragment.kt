@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.viewbinding.GroupieViewHolder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.databinding.FragmentListBinding
 import tech.borgranch.pokedex.databinding.ItemPokemonBinding
@@ -20,10 +24,6 @@ import java.net.URI
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ListFragment()
-    }
 
     private var selectedIndex: Int = -1
 
@@ -52,22 +52,45 @@ class ListFragment : Fragment() {
     }
 
     private fun bindUI() {
+        if (!viewModel.animShown) {
+            ui.animationView.visibility = View.VISIBLE
+            viewModel.animShown = true
+        } else {
+            ui.animationView.visibility = View.GONE
+        }
         lifecycleScope.launchWhenResumed {
             navArgs.let {
                 selectedIndex = it.selectedIndex
             }
             if (selectedIndex == -1) {
+                selectedIndex = 0
                 viewModel.fetchNextPokemonList()
-            } else {
-                viewModel.retryPokemonList()
             }
+
             viewModel.pokemonPage.observe(viewLifecycleOwner) {
                 pokemonOffset = it * viewModel.limit
             }
             viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
-                // Update the cached copy of the pokemonList in the adapter.
+                if (!(pokemonList.isNotEmpty() || viewModel.isLoading())) {
+                    viewModel.fetchNextPokemonList()
+                }
                 pokemonList?.let {
                     initRecyclerView(it.toPokemonCards())
+                    if (ui.animationView.visibility == View.VISIBLE) {
+                        lifecycleScope.launch(Dispatchers.Default) {
+                            delay(2000)
+                            withContext(Dispatchers.Main) {
+                                ui.animationView.visibility = View.GONE
+                                ui.pokemonsList.visibility = View.VISIBLE
+                            }
+                        }
+                    } else {
+                        ui.pokemonsList.visibility = View.VISIBLE
+                    }
+                    if (selectedIndex != -1) {
+                        val lm = ui.pokemonsList.layoutManager as GridLayoutManager
+                        lm.scrollToPositionWithOffset(selectedIndex, 0)
+                    }
                 }
             }
 
@@ -77,8 +100,7 @@ class ListFragment : Fragment() {
 
     private fun initRecyclerView(pokemonCards: List<PokemonListCard>) {
         groupAdaptor.apply {
-            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            update(pokemonCards)
+            updateAsync(pokemonCards)
         }
 
         ui.pokemonsList.apply {
@@ -86,18 +108,19 @@ class ListFragment : Fragment() {
             adapter = groupAdaptor
         }
 
-        if (selectedIndex != -1) {
-            val lm = ui.pokemonsList.layoutManager as GridLayoutManager
-            lm.scrollToPositionWithOffset(selectedIndex, 20)
-        }
+        ui.pokemonsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-        val recyclerViewPager = RecyclerViewPager(
-            recyclerView = ui.pokemonsList,
-            isLoading = { viewModel.isLoading() },
-            loadMore = { viewModel.fetchNextPokemonList() },
-            onLast = { false }
-        )
-        recyclerViewPager.resetCurrentPage()
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+                if (firstVisibleItemPosition + visibleItemCount >= totalItemCount) {
+                    viewModel.fetchNextPokemonList()
+                }
+            }
+        })
     }
 
     private fun List<PokemonItem>.toPokemonCards(): List<PokemonListCard> {

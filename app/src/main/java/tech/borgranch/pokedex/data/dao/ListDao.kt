@@ -14,6 +14,9 @@ interface ListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(pokemonItems: List<PokemonItem>)
 
+    @Query("SELECT COUNT(*) FROM pokemon_item")
+    fun getCount(): Int
+
     @Query("SELECT * FROM pokemon_item WHERE page = :page")
     fun getPage(page: Int): List<PokemonItem>
 

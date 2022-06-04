@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="6dp"
-    android:background="@color/background800"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/white_12"
     app:cardCornerRadius="14dp"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pokemon_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?attr/selectableItemBackground"

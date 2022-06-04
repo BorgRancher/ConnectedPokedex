@@ -24,32 +24,29 @@ import dagger.hilt.android.AndroidEntryPoint
 import tech.borgranch.pokedex.databinding.FragmentDetailBinding
 import tech.borgranch.pokedex.databinding.ItemTypeBinding
 import tech.borgranch.pokedex.ui.main.MainActivity
-import java.net.URI
+import tech.borgranch.pokedex.ui.utils.verticalGradientDrawable
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
     private var pokemonName: String = ""
     private var artwork: String = ""
     private var index: Int = 0
-
-    companion object {
-        fun newInstance() = DetailFragment()
-    }
-
     private val viewModel by viewModels<DetailViewModel>()
     private var _ui: FragmentDetailBinding? = null
     private val ui get() = _ui!!
     private val navArgs by navArgs<DetailFragmentArgs>()
     private var groupAdaptor: GroupAdapter<GroupieViewHolder<ItemTypeBinding>>? = null
+    private var abilityAdaptor: GroupAdapter<GroupieViewHolder<ItemTypeBinding>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         activity?.onBackPressedDispatcher?.addCallback(
             this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     val action = DetailFragmentDirections.actionDetailFragmentToListFragment()
-                    action.selectedIndex = this@DetailFragment.index
+                    action.selectedIndex = this@DetailFragment.index - 1
                     this@DetailFragment.findNavController().navigate(action)
                 }
             }
@@ -76,42 +73,58 @@ class DetailFragment : Fragment() {
             this.pokemonName = it.name
             this.artwork = it.artwork
             this.index = it.index + 1
-
-            lifecycleScope.launchWhenResumed {
-                bindUI()
-                viewModel.getPokemonDetail(pokemonName)
-            }
+            viewModel.getPokemonDetail(pokemonName)
+            bindUI()
         }
     }
 
     private fun bindUI() {
-        viewModel.pokemonDetail.observe(viewLifecycleOwner) {
-            it?.let { pokemonDetail ->
-                ui.progressbar.visibility = View.GONE
-                ui.apply {
-                    loadArtwork()
-                    name.text = pokemonDetail.name
-                    index.text = this@DetailFragment.index.toString().padStart(4, '0')
-                }
+        lifecycleScope.launchWhenResumed {
+            ui.progressbar.visibility = View.VISIBLE
+            viewModel.pokemonDetail.observe(viewLifecycleOwner) {
+                it?.let { monsterDetail ->
+                    ui.apply {
+                        loadArtwork(artwork)
+                        name.text = monsterDetail.name
+                        index.text = this@DetailFragment.index.toString().padStart(4, '0')
+                        height.text = monsterDetail.getHeightString()
+                        weight.text = monsterDetail.getWeightString()
+                        progressbar.visibility = View.GONE
+                    }
 
-                ui.height.text = pokemonDetail.getHeightString()
-                ui.weight.text = pokemonDetail.getWeightString()
-                pokemonDetail.types?.let { it ->
-                    initTypeRecyclerView(it.toTypeItems())
-                }
-                ui.arrow.setOnClickListener { arrowView ->
-                    val action = DetailFragmentDirections.actionDetailFragmentToListFragment()
-                    action.selectedIndex = this@DetailFragment.index - 1
-                    Navigation.findNavController(arrowView).navigate(action)
+                    monsterDetail.types?.let { it ->
+                        initTypeRecyclerView(it.toTypeItems())
+                    }
+                    monsterDetail.abilities?.let { it ->
+                        initAbilityRecyclerView(it.toTypeItems())
+                    }
+
+                    ui.arrow.setOnClickListener { arrowView ->
+                        val action = DetailFragmentDirections.actionDetailFragmentToListFragment()
+                        action.selectedIndex = this@DetailFragment.index - 1
+                        Navigation.findNavController(arrowView).navigate(action)
+                    }
                 }
             }
+        }
+    }
+
+    private fun initAbilityRecyclerView(items: List<TypeItem>) {
+        abilityAdaptor = GroupAdapter<GroupieViewHolder<ItemTypeBinding>>().apply {
+            stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            updateAsync(items)
+        }
+        ui.abilitiesRecyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = abilityAdaptor
         }
     }
 
     private fun initTypeRecyclerView(typeCards: List<TypeItem>) {
         groupAdaptor = GroupAdapter<GroupieViewHolder<ItemTypeBinding>>().apply {
             stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            addAll(typeCards)
+            updateAsync(typeCards)
         }
         ui.typesRecyclerView.apply {
             setHasFixedSize(true)
@@ -119,17 +132,22 @@ class DetailFragment : Fragment() {
             adapter = groupAdaptor
         }
     }
-    private fun loadArtwork() {
+    private fun loadArtwork(imageUrl: String) {
         Glide.with(requireContext())
-            .load(artwork)
+            .load(imageUrl)
             .listener(
-                GlidePalette.with(artwork)
+                GlidePalette.with(imageUrl)
                     .use(BitmapPalette.Profile.MUTED)
                     .intoCallBack { palette ->
-                        val rgb = palette?.dominantSwatch?.rgb
-                        if (rgb != null) {
+                        val rgb = palette?.lightMutedSwatch?.rgb
+                        val domain = palette?.darkMutedSwatch?.rgb
+                        // val textColor = palette?.darkMutedSwatch?.titleTextColor
+                        if (rgb != null && domain != null) {
                             ui.apply {
-                                header.setBackgroundColor(rgb)
+                                val gradientDrawable = verticalGradientDrawable(domain, rgb)
+                                header.background = gradientDrawable
+                                // index.setTextColor(textColor)
+                                // arrow.drawable.setTint(textColor)
                             }
                         }
                     }.crossfade(true)
@@ -141,11 +159,9 @@ class DetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity).toolbarShow()
+        groupAdaptor = null
+        abilityAdaptor = null
         _ui = null
-    }
-
-    interface OnFragmentInteractionListener {
-        fun onFragmentInteraction(uri: URI)
     }
 }
 

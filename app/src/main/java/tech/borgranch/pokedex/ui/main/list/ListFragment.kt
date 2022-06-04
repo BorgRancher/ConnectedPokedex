@@ -100,7 +100,7 @@ class ListFragment : Fragment() {
 
     private fun initRecyclerView(pokemonCards: List<PokemonListCard>) {
         groupAdaptor.apply {
-            addAll(pokemonCards)
+            updateAsync(pokemonCards)
         }
 
         ui.pokemonsList.apply {

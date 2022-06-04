@@ -61,7 +61,7 @@ class ListRepository @Inject constructor(
         val pokemons: List<PokemonItem> = itemDao.getPage(page)
         if (pokemons.isNotEmpty()) {
             // already in db
-            val data = itemDao.getPage(page)
+            val data = itemDao.getCurrentPages(page)
             pokemonList.postValue(data)
             loadingState.postValue(false)
         } else {

@@ -71,9 +71,7 @@ class ListFragment : Fragment() {
                 pokemonOffset = it * viewModel.limit
             }
             viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
-                if (!(pokemonList.isNotEmpty() || viewModel.isLoading())) {
-                    viewModel.fetchNextPokemonList()
-                }
+                ui.progressBar.visibility = if (viewModel.isLoading()) View.VISIBLE else View.GONE
                 pokemonList?.let {
                     initRecyclerView(it.toPokemonCards())
                     if (ui.animationView.visibility == View.VISIBLE) {
@@ -93,8 +91,6 @@ class ListFragment : Fragment() {
                     }
                 }
             }
-
-            ui.progressBar.visibility = if (viewModel.isLoading()) View.VISIBLE else View.GONE
         }
     }
 

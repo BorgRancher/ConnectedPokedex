@@ -39,6 +39,8 @@ class ListRepository @Inject constructor(
     private var coroutineScope = CoroutineScope(coroutineDispatcher)
     private var pokemonList: MutableLiveData<List<PokemonItem>> = MutableLiveData()
     val allPokemon: LiveData<List<PokemonItem>> get() = pokemonList
+    private var endOfList: MutableLiveData<Boolean> = MutableLiveData(false)
+    val listEnded: LiveData<Boolean> get() = endOfList
 
     @WorkerThread
     suspend fun fetchPokeDex(page: Int) {
@@ -82,12 +84,16 @@ class ListRepository @Inject constructor(
             )
             val incoming = pokeApiClient.query(query).execute()
             if (!incoming.hasErrors()) {
-
-                incoming.data?.pokemons?.results?.mapNotNull { result ->
-                    result?.let {
-                        if (!itemDao.exists(it.name)) {
-                            // Push pokemon to db
-                            itemDao.insert(it.toPokemonItem(page))
+                val remotePokemons = incoming.data?.pokemons?.results
+                if (remotePokemons.isNullOrEmpty()) {
+                    endOfList.postValue(true)
+                } else {
+                    remotePokemons.mapNotNull { result ->
+                        result?.let {
+                            if (!itemDao.exists(it.name)) {
+                                // Push pokemon to db
+                                itemDao.insert(it.toPokemonItem(page))
+                            }
                         }
                     }
                 }

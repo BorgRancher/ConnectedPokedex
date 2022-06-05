@@ -66,7 +66,7 @@ class ListRepository @Inject constructor(
             loadingState.postValue(false)
         } else {
             fetchRemotePokemon(page).also {
-                val data = itemDao.getPage(page)
+                val data = itemDao.getCurrentPages(page)
                 pokemonList.postValue(data)
                 loadingState.postValue(false)
             }

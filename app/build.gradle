@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.apollographql.apollo3'
     id 'org.jlleitschuh.gradle.ktlint'
+    id 'deploygate'
 }
 
 android {
@@ -166,6 +167,9 @@ dependencies {
 
     // alternatively - without Android dependencies for tests
     testImplementation "androidx.paging:paging-common:$paging_version"
+
+    // Deploygate for distribution
+    implementation 'com.deploygate:sdk:4.1.0'
 }
 
 apollo {

@@ -1,8 +1,17 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        google()
         mavenCentral()
+        google()
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            switch (requested.id.id) {
+                case "com.deploygate":
+                    useModule("com.deploygate:gradle:2.5.0")
+                    break
+            }
+        }
     }
 }
 

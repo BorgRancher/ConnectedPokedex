@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="tech.borgranch.pokedex">
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS"
@@ -19,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pokedex"
         tools:ignore="UnusedAttribute">
+        <profileable android:shell="true"/>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
@@ -29,6 +30,7 @@
             </intent-filter>
         </activity>
     </application>
+
     <queries>
         <package android:name="com.deploygate" />
     </queries>

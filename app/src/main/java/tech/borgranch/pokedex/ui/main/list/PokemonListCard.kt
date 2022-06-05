@@ -33,6 +33,9 @@ class PokemonListCard(
                             if (muted != null && darkMuted != null) {
                                 val gradientDrawable = verticalGradientDrawable(muted, darkMuted)
                                 viewBinding.pokemonHolder.background = gradientDrawable
+                            } else if (darkMuted != null) {
+                                val gradientDrawable = verticalGradientDrawable(darkMuted, darkMuted)
+                                viewBinding.pokemonHolder.background = gradientDrawable
                             }
                         }.crossfade(true)
                 )

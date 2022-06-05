@@ -7,6 +7,7 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Technologies used:
+- [Android Jetpack (Room. Lifecycle etc)](https://developer.android.com/jetpack)
 - [Kotlin & Kotlin Coroutines](https://kotlinlang.org/)
 - [Apollo GraphQL for Kotlin](https://apollographql.com/)
 - [Glide for Kotlin](https://bumptech.github.io/glide/)
@@ -16,7 +17,7 @@
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
 <img alt="qrcode" src="image_assets/qrpokefinal.png"/>
-Scan this QR Code for a live demo - powered by (Deploygate)[https://deploygate.com]
+Scan this QR Code for a live demo - powered by [Deploygate](https://deploygate.com)
 
 
 Copyright 2022 Shaun McDonald

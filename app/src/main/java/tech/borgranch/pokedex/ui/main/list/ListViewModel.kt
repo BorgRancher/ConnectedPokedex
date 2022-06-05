@@ -40,21 +40,22 @@ class ListViewModel @Inject constructor(
     @MainThread
     fun fetchNextPokemonList() {
         viewModelScope.launch {
-            if (!isLoading()) {
+            if (!isLoading() && !isLastPage()) {
                 pokemonIndex.value = pokemonIndex.value?.plus(1)
                 withContext(coroutineContext) {
-                    listRepository.fetchPokeDex(pokemonIndex.value!!)
+                    listRepository.fetchPokeDex(pokemonPage.value!!)
                 }
             }
         }
     }
 
     fun isLoading(): Boolean = listRepository.loading.value ?: false
+    fun isLastPage(): Boolean = listRepository.listEnded.value ?: false
 
     @MainThread
     fun retryPokemonList() {
         viewModelScope.launch {
-            if (!isLoading()) {
+            if (!isLoading() && !isLastPage()) {
                 withContext(coroutineContext) {
                     listRepository.fetchPokeDex(pokemonIndex.value ?: 1)
                 }

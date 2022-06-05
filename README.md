@@ -11,6 +11,7 @@
 - [Apollo GraphQL for Kotlin](https://apollographql.com/)
 - [Glide for Kotlin](https://bumptech.github.io/glide/)
 - [Material Components](https://material.io/)
+- [Hilt](https://developer.android.com/jetpack/androidx/hilt)
 - [R8](https://r8.dev/)
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
@@ -19,9 +20,7 @@ Copyright 2022 Shaun McDonald
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
+You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

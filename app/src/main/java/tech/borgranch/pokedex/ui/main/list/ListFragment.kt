@@ -105,7 +105,7 @@ class ListFragment : Fragment() {
         }
 
         ui.pokemonsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
+            // Calculate when to fetch next pokemon list
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as GridLayoutManager

@@ -35,6 +35,7 @@ class ListViewModel @Inject constructor(
     init {
         Timber.d("ListViewModel created")
         coroutineContext = fetchJob + this.ioDispatcher
+        pokemonIndex.value = -1
     }
 
     @MainThread

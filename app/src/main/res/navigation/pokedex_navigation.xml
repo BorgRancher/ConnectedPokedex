@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_listFragment_to_detailFragment"
             app:destination="@id/detailFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/slide_in_left"
-            app:popExitAnim="@android:anim/slide_out_right"
+            app:enterAnim="@anim/animate_shrink_enter"
+            app:exitAnim="@anim/animate_slide_up_exit"
+            app:popEnterAnim="@anim/animate_fade_enter"
+            app:popExitAnim="@anim/animate_fade_exit"
             app:popUpToInclusive="false" />
         <argument
             android:name="selectedIndex"
@@ -43,10 +43,10 @@
         <action
             android:id="@+id/action_detailFragment_to_listFragment"
             app:destination="@id/listFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/animate_zoom_enter"
+            app:exitAnim="@anim/animate_shrink_exit"
+            app:popEnterAnim="@anim/animate_fade_enter"
+            app:popExitAnim="@anim/animate_fade_exit"
             app:popUpTo="@id/listFragment"
             app:popUpToInclusive="true" />
     </fragment>

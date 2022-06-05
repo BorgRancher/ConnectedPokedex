@@ -139,12 +139,19 @@ class DetailFragment : Fragment() {
                 GlidePalette.with(imageUrl)
                     .use(BitmapPalette.Profile.MUTED)
                     .intoCallBack { palette ->
-                        val rgb = palette?.lightMutedSwatch?.rgb
+                        val lightMuted = palette?.lightMutedSwatch?.rgb
                         val domain = palette?.darkMutedSwatch?.rgb
                         // val textColor = palette?.darkMutedSwatch?.titleTextColor
-                        if (rgb != null && domain != null) {
+                        if (lightMuted != null && domain != null) {
                             ui.apply {
-                                val gradientDrawable = verticalGradientDrawable(domain, rgb)
+                                val gradientDrawable = verticalGradientDrawable(domain, lightMuted)
+                                header.background = gradientDrawable
+                                // index.setTextColor(textColor)
+                                // arrow.drawable.setTint(textColor)
+                            }
+                        } else if (domain != null) {
+                            ui.apply {
+                                val gradientDrawable = verticalGradientDrawable(domain, domain)
                                 header.background = gradientDrawable
                                 // index.setTextColor(textColor)
                                 // arrow.drawable.setTint(textColor)

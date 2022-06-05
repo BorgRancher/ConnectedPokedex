@@ -9,16 +9,16 @@
 ## Technologies used:
 - [Android Jetpack (Room. Lifecycle etc)](https://developer.android.com/jetpack)
 - [Kotlin & Kotlin Coroutines](https://kotlinlang.org/)
-- [Apollo GraphQL for Kotlin](https://apollographql.com/)
+- [Apollo GraphQL for Kotlin](https://github.com/apollographql/apollo-kotlin)
 - [Glide for Kotlin](https://bumptech.github.io/glide/)
 - [Material Components](https://material.io/)
-- [Hilt](https://developer.android.com/jetpack/androidx/hilt)
+- [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [R8](https://r8.dev/)
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
-<img alt="qrcode" src="image_assets/qrpokefinal.png"/>
 Scan this QR Code for a live demo.
-(powered by [DeployGate](https://deploygate.com))
+<img alt="qrcode" src="image_assets/qrpokefinal.png"/>
+Powered by [DeployGate](https://deploygate.com)
 
 
 Copyright 2022 Shaun McDonald

@@ -17,7 +17,7 @@ android {
         minSdk 23
         targetSdk 32
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
         buildConfigField("String","BASE_URL","\"https://graphql-pokeapi.graphcdn.app\"")
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

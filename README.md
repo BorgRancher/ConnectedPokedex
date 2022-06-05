@@ -15,6 +15,8 @@
 - [R8](https://r8.dev/)
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
+## Scan this code with your Android phone for a live demo
+<img alt="qrcode" src="image_assets/qrpokefinal.png"/>
 
 Copyright 2022 Shaun McDonald
 

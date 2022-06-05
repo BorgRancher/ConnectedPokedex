@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<network-security>
+<network-security-config>
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="false">graphql-pokeapi.graphcdn.app</domain>
     </domain-config>
-</network-security>
+</network-security-config>

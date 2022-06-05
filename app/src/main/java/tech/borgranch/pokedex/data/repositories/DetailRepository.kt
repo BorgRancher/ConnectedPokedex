@@ -15,6 +15,13 @@ import tech.borgranch.pokedex.data.dto.PokemonDetail
 import tech.borgranch.pokedex.graphql.PokemonQuery
 import javax.inject.Inject
 
+/**
+ * @author Shaun McDonald
+ * @since 2022-06-01
+ * @version 1.0.0
+ * Repository for Pokemon details
+ */
+
 class DetailRepository @Inject constructor(
     val detailDao: DetailDao,
     val pokedexClient: ApolloClient,

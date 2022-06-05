@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 /**
  * @author Shaun McDonald
- * @version 1.2
+ * @version 1.0.0
  *
  * A single source for all dispatchers in the application,
  * neatly avoiding the untestable mess of hardcoded values.

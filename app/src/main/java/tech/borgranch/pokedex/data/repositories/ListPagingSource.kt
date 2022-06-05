@@ -10,6 +10,12 @@ import tech.borgranch.pokedex.data.dto.PokemonItem
 import tech.borgranch.pokedex.graphql.PokemonsQuery
 import java.io.IOException
 
+/**
+ * @author Shaun McDonald
+ * @since 2022-06-01
+ * @version 0.0.1
+ * Paging source for getting list of pokemons
+ */
 class ListPagingSource(
     private val pokeDexClient: ApolloClient,
     private val itemDao: ListDao

@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 /**
  * @author Shaun McDonald
- * @version 1.2
+ * @version 1.0.0
  * Offline storage for Pokedex implemented in Android Room
  */
 

@@ -29,7 +29,7 @@ class ListViewModel @Inject constructor(
     private val supervisorJob = SupervisorJob()
     private val fetchJob = Job(supervisorJob)
     val pokemonList: LiveData<List<PokemonItem>> = listRepository.allPokemon
-    private var pokemonIndex: MutableLiveData<Int> = MutableLiveData(0)
+    private var pokemonIndex: MutableLiveData<Int> = MutableLiveData(-1)
     private var coroutineContext: CoroutineContext
     val pokemonPage: LiveData<Int> get() = pokemonIndex
     init {

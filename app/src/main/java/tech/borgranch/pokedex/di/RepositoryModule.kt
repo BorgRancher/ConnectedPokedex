@@ -12,6 +12,13 @@ import tech.borgranch.pokedex.data.dao.ListDao
 import tech.borgranch.pokedex.data.repositories.DetailRepository
 import tech.borgranch.pokedex.data.repositories.ListRepository
 
+/**
+ * @author Shaun McDonald
+ * @since 2022-06-01
+ * @version 1.0.0
+ * Module providing dependencies for the ViewModels
+ */
+
 @Module
 @InstallIn(ViewModelComponent::class)
 object RepositoryModule {

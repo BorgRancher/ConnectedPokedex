@@ -17,7 +17,7 @@
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
 <img alt="qrcode" src="image_assets/qrpokefinal.png"/>
-Scan this QR Code for a live demo - powered by [Deploygate](https://deploygate.com)
+Scan this QR Code for a live demo - powered by [DeployGate](https://deploygate.com)
 
 
 Copyright 2022 Shaun McDonald

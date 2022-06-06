@@ -16,8 +16,8 @@
 - [R8](https://r8.dev/)
 - Creature data sourced from [PokeAPI](https://graphql-pokeapi.graphcdn.app)
 
-Scan this QR Code for a live demo.
-<img alt="qrcode" src="image_assets/qrpokefinal.png"/>
+Scan this QR Code for a live demo.<br/>
+<img alt="qrcode" src="image_assets/qrpokefinal.png"/><br/>
 Powered by [DeployGate](https://deploygate.com)
 
 

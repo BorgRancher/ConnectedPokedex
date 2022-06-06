@@ -36,15 +36,17 @@ class DetailRepository @Inject constructor(
         pokemonInfo.postValue(localData)
     }
 
-    private suspend fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail> = coroutineScope.async(coroutineDispatcher) {
-        val localDetail = detailDao.getPokemonDetailByName(name)
-        when (localDetail != null) {
-            true -> {
-                return@async localDetail
-            }
-            else -> {
-                fetchRemotePokemon(name)
-                return@async detailDao.getPokemonDetailByName(name)!!
+    private suspend fun getPokemonDetailAsync(name: String = ""): Deferred<PokemonDetail> {
+        return coroutineScope.async(coroutineDispatcher) {
+            val localDetail = detailDao.getPokemonDetailByName(name)
+            when (localDetail != null) {
+                true -> {
+                    return@async localDetail
+                }
+                else -> {
+                    fetchRemotePokemon(name)
+                    return@async detailDao.getPokemonDetailByName(name)!!
+                }
             }
         }
     }

@@ -7,7 +7,7 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## Technologies used:
-- <a href="(https://developer.android.com/jetpack/?target=_blank">Android Jetpack (Room. Lifecycle etc)</a>
+- <a href="https://developer.android.com/jetpack/?target=_blank">Android Jetpack (Room. Lifecycle etc)</a>
 - [Kotlin & Kotlin Coroutines](https://kotlinlang.org/?target=_blank)
 - [Apollo GraphQL for Kotlin](https://github.com/apollographql/apollo-kotlin?target=_blank)
 - [Glide for Kotlin](https://bumptech.github.io/glide/?target=_blank)

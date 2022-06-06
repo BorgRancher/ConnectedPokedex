@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         mavenCentral()
         google()
-        gradlePluginPortal()
+        jcenter()
     }
     resolutionStrategy {
         eachPlugin {
@@ -20,12 +20,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven{ url 'https://mvnrepository.com/' }
         maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
     }
 }
-
-
 
 rootProject.name = "Pokedex"
 include ':app'

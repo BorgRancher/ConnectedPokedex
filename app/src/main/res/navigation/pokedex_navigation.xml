@@ -48,6 +48,7 @@
             app:popEnterAnim="@anim/animate_fade_enter"
             app:popExitAnim="@anim/animate_fade_exit"
             app:popUpTo="@id/listFragment"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" />
     </fragment>
 </navigation>

@@ -1,7 +1,6 @@
 package tech.borgranch.pokedex.di
 
 import android.app.Application
-import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +25,7 @@ object PersistenceModule {
     fun provideAppDatabase(
         application: Application,
     ): AppDatabase {
-        return Room
-            .databaseBuilder(application, AppDatabase::class.java, "Pokedex.db")
-            .fallbackToDestructiveMigration()
-            .build()
+        return AppDatabase(application)
     }
 
     @Provides

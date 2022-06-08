@@ -1,14 +1,5 @@
 <resources>
 
-    <style name="Widget.Theme.Pokedex.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
-    <style name="Widget.Theme.Pokedex.ButtonBar.Fullscreen" parent="">
-        <item name="android:background">@color/black_overlay</item>
-        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
-    </style>
-
     <style name="TextStyle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
@@ -30,7 +21,7 @@
     <style name="home_toolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">?colorPrimary</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
     <style name="home_toolbar_detail_text">
         <item name="android:layout_width">match_parent</item>

@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         mavenCentral()
         google()
-        gradlePluginPortal()
+        jcenter()
     }
     resolutionStrategy {
         eachPlugin {

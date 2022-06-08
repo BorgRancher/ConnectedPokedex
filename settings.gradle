@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         mavenCentral()
         google()
-        jcenter()
+        gradlePluginPortal()
     }
     resolutionStrategy {
         eachPlugin {
@@ -22,6 +22,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven{ url 'https://mvnrepository.com/' }
         maven { url 'https://jitpack.io' }
+        jcenter()
     }
 }
 

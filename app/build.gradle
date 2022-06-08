@@ -10,6 +10,12 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
 }
 
+detekt {
+    toolVersion = "1.20.0"
+    config = files("config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+}
+
 android {
     compileSdk 32
 
@@ -76,14 +82,14 @@ android {
 
     dependencies {
 
-        implementation 'androidx.core:core-ktx:1.7.0'
-        implementation 'androidx.appcompat:appcompat:1.4.1'
+        implementation 'androidx.core:core-ktx:1.8.0'
+        implementation 'androidx.appcompat:appcompat:1.4.2'
 
         // Kotlin extensions for activity and fragment
         implementation 'androidx.activity:activity-ktx:1.4.0'
         implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
-        implementation 'com.google.android.material:material:1.6.0'
+        implementation 'com.google.android.material:material:1.6.1'
 
         implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -182,4 +188,3 @@ apollo {
     packageName.set("tech.borgranch.pokedex.graphql")
     generateTestBuilders.set(true)
 }
-

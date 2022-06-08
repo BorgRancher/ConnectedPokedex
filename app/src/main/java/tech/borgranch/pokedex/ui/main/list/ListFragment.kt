@@ -35,7 +35,7 @@ class ListFragment : Fragment() {
     private var pokemonOffset: Int = 0
     private var _ui: FragmentListBinding? = null
     private val ui: FragmentListBinding get() = _ui!!
-    private val groupAdaptor = GroupAdapter<GroupieViewHolder<ItemPokemonBinding>>()
+    private var groupAdaptor: GroupAdapter<GroupieViewHolder<ItemPokemonBinding>>? = null
     private val navArgs by navArgs<ListFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,7 +95,7 @@ class ListFragment : Fragment() {
     }
 
     private fun initRecyclerView(pokemonCards: List<PokemonListCard>) {
-        groupAdaptor.apply {
+        groupAdaptor = GroupAdapter<GroupieViewHolder<ItemPokemonBinding>>().apply {
             updateAsync(pokemonCards)
         }
 
@@ -125,6 +125,7 @@ class ListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        groupAdaptor = null
         _ui = null
     }
 }

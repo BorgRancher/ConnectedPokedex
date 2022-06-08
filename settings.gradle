@@ -20,12 +20,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven{ url 'https://mvnrepository.com/' }
         maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
+        jcenter()
     }
 }
-
-
 
 rootProject.name = "Pokedex"
 include ':app'

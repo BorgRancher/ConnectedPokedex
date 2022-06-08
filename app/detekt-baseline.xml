@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ComplexMethod:TypeUtils.kt$TypeUtils$fun getTypeColor(type: String): Int</ID>
+    <ID>MagicNumber:BitmapUtils.kt$BitmapUtils$100</ID>
+    <ID>MagicNumber:DetailFragment.kt$DetailFragment$4</ID>
+    <ID>MagicNumber:ListFragment.kt$ListFragment$2000</ID>
+    <ID>MagicNumber:ListItemSpacer.kt$ListItemSpacer$32</ID>
+    <ID>MagicNumber:PokemonDetail.kt$PokemonDetail$10.0</ID>
+    <ID>MagicNumber:RecyclerViewPager.kt$RecyclerViewPager$10</ID>
+    <ID>ReturnCount:ListPagingSource.kt$ListPagingSource$ override suspend fun load(params: LoadParams&lt;Int>): LoadResult&lt;Int, PokemonItem></ID>
+    <ID>ReturnCount:RecyclerViewPager.kt$RecyclerViewPager$override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)</ID>
+    <ID>TooGenericExceptionCaught:DetailViewModel.kt$DetailViewModel$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:ListRepository.kt$ListRepository$e: Exception</ID>
+    <ID>TooGenericExceptionThrown:DetailRepository.kt$DetailRepository$throw Exception(result.errors.toString())</ID>
+  </CurrentIssues>
+</SmellBaseline>

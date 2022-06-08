@@ -9,32 +9,18 @@
     <color name="black">#FF000000</color>
     <color name="white_12">#fafafa</color>
     <color name="white_56">#8effffff</color>
-    <color name="white_70">#b2ffffff</color>
-    <color name="white_87">#ddffffff</color>
     <color name="white_93">#edf8f8f8</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
-    <color name="black_overlay">#66000000</color>
-    <color name="divider_color">#BDBDBD</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icon_color">#FFFFFF</color>
     <color name="background">#2B292B</color>
     <color name="background800">#424242</color>
-    <color name="background900">#212121</color>
 
     // Pokemon type colours
     <color name="bug">#179A55</color>
     <color name="dark">#040706</color>
     <color name="dragon">#378A94</color>
-    <color name="normal">#B1A5A5</color>
     <color name="default_type">#FF01579B</color>
     <color name="electric">#E0E64B</color>
     <color name="fairy">#9E1A44</color>
-    <color name="yellow">#FBC02D</color>
     <color name="fire">#B22328</color>
     <color name="flying">#90B1C5</color>
     <color name="ghost">#363069</color>

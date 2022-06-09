@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Connectédex</string>
-    <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="artwork_for_pocket_monster">artwork for pocket monster</string>
     <string name="weight">Weight</string>
     <string name="height">Height</string>
     <string name="abilities">Abilities</string>
     <string name="type_placeholder">TypeHolder</string>
-    <string name="ability_placeholder">AbilityHolder</string>
 </resources>
